@@ -445,9 +445,9 @@
   function lineChart(P) {
     const W = 760, H = 230, pad = 34, cols = ["#ff5a3c", "#0f9d8a", "#5b4de0"];
     const x = i => pad + i * (W - pad * 2) / (P.days.length - 1), y = v => H - pad - (v - 40) / 60 * (H - pad * 2);
-    const grid = [40, 60, 80, 100].map(v => `<line x1="${pad}" x2="${W - pad}" y1="${y(v)}" y2="${y(v)}" stroke="#e6e3dc" stroke-dasharray="3 4"/><text x="4" y="${y(v) + 4}" font-size="11" fill="#7a7f9a">${v}</text>`).join("");
-    const lines = P.subjects.map((s, k) => `<polyline fill="none" stroke="${cols[k]}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${s.vals.map((v, i) => `${x(i)},${y(v)}`).join(" ")}"/>${s.vals.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#fff" stroke="${cols[k]}" stroke-width="2.5"><title>${s.name}: ${v}%</title></circle>`).join("")}`).join("");
-    const labels = P.days.map((d, i) => `<text x="${x(i)}" y="${H - 8}" font-size="12" text-anchor="middle" fill="#7a7f9a">${d}</text>`).join("");
+    const grid = [40, 60, 80, 100].map(v => `<line x1="${pad}" x2="${W - pad}" y1="${y(v)}" y2="${y(v)}" style="stroke:var(--line)" stroke-dasharray="3 4"/><text x="4" y="${y(v) + 4}" font-size="11" style="fill:var(--muted)">${v}</text>`).join("");
+    const lines = P.subjects.map((s, k) => `<polyline fill="none" stroke="${cols[k]}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${s.vals.map((v, i) => `${x(i)},${y(v)}`).join(" ")}"/>${s.vals.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="4" style="fill:var(--card)" stroke="${cols[k]}" stroke-width="2.5"><title>${s.name}: ${v}%</title></circle>`).join("")}`).join("");
+    const labels = P.days.map((d, i) => `<text x="${x(i)}" y="${H - 8}" font-size="12" text-anchor="middle" style="fill:var(--muted)">${d}</text>`).join("");
     return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin-top:10px">${grid}${lines}${labels}</svg>`;
   }
 
@@ -456,7 +456,7 @@
   // =========================================================
   function school() {
     const M = DEMO.school;
-    const color = v => v < 50 ? ["#ff5a3c", "#fff"] : v < 65 ? ["#ffd0c4", "#8a2a17"] : v < 78 ? ["#fdf0d3", "#7a5004"] : ["#d9f3ee", "#0a6356"];
+    const lvl = v => v < 50 ? "l1" : v < 65 ? "l2" : v < 78 ? "l3" : "l4";
     app.innerHTML = `
     <section class="page">
       <div><div class="eyebrow">Maktab va vazirlik paneli</div><h2 style="margin-top:4px">${esc(M.name)} · analitika</h2></div>
@@ -470,7 +470,7 @@
         <div class="card span2"><div class="row between wrapf"><h3>Mavzular xaritasi — o'zlashtirish %</h3><span class="pill red">«Umumiy maxraj» — butun maktab bo'yicha muammo</span></div>
           <div class="heat" style="grid-template-columns:120px repeat(${M.classes.length},1fr);margin-top:14px">
             <div></div>${M.classes.map(c => `<div class="col">${c}</div>`).join("")}
-            ${M.topics.map((t, r) => `<div class="lbl">${esc(t)}</div>${M.grid[r].map(v => { const [bg, fg] = color(v); return `<div class="h" style="background:${bg};color:${fg}">${v}</div>`; }).join("")}`).join("")}
+            ${M.topics.map((t, r) => `<div class="lbl">${esc(t)}</div>${M.grid[r].map(v => `<div class="h ${lvl(v)}">${v}</div>`).join("")}`).join("")}
           </div></div>
         <div class="card"><h3>⚠️ Yordam kerak bo'lgan o'quvchilar</h3>
           ${M.atRisk.map(r => `<div class="risk"><div class="ava">${r.name[0]}</div><div><b>${esc(r.name)}</b> <span class="pill">${r.cls}</span><div class="muted" style="font-size:13.5px">${esc(r.reason)}</div></div></div>`).join("")}
@@ -497,6 +497,27 @@
     try { const r = await AI.call("Bitta so'z bilan javob ber: Salom"); toast("✅ AI ishlayapti: " + r.trim().slice(0, 30)); refreshDot(); }
     catch (e) { toast("❌ " + e.message); }
   };
+
+  // ---------- dark / light ----------
+  function currentTheme() {
+    const t = document.documentElement.dataset.theme;
+    if (t === "dark" || t === "light") return t;
+    return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function paintThemeBtn() {
+    const dark = currentTheme() === "dark";
+    $("#themeBtn").textContent = dark ? "☀️" : "🌙";
+    $("#themeBtn").title = dark ? "Yorug' rejim" : "Qorong'i rejim";
+    const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = dark ? "#0e1022" : "#171a33";
+  }
+  $("#themeBtn").onclick = () => {
+    const next = currentTheme() === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("darsizi_theme", next); } catch {}
+    paintThemeBtn();
+  };
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", paintThemeBtn);
+  paintThemeBtn();
 
   refreshDot();
   route();
