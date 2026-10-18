@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>DarsIzi — har bir dars iz qoldiradi</title>
+  <meta name="description" content="DarsIzi — sinfdagi jonli darsni AI yordamida o'quvchi, o'qituvchi, ota-ona va maktab uchun foydaga aylantiradigan platforma.">
+  <meta name="theme-color" content="#171a33">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a href="#/" class="logo" style="text-decoration:none;color:inherit">
+        <span class="logo-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 18c3-1 4-4 6-8s4-6 10-6" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="5" cy="18" r="2.4" fill="#ff5a3c"/><circle cx="12" cy="9.5" r="1.6" fill="#fff"/><circle cx="19" cy="4.5" r="1.6" fill="#fff"/></svg>
+        </span>
+        <span>Dars<b>Izi</b></span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#/teacher" data-r="teacher">👩‍🏫 O'qituvchi</a>
+        <a href="#/student" data-r="student">👨‍🎓 O'quvchi</a>
+        <a href="#/parent" data-r="parent">👨‍👩‍👦 Ota-ona</a>
+        <a href="#/school" data-r="school">🏫 Maktab</a>
+      </nav>
+      <button class="icon-btn" id="settingsBtn" title="AI sozlamalari"><span class="ai-dot" id="aiDot"></span></button>
+    </div>
+  </header>
+
+  <main id="app" class="wrap"></main>
+
+  <footer class="foot">
+    <div class="wrap row between wrapf">
+      <span>© 2026 DarsIzi · X7 jamoasi · CoddyCamp Hackathon</span>
+      <span>Ham sayt, ham ilova (PWA) — telefonda «Bosh ekranga qo'shish»</span>
+    </div>
+  </footer>
+
+  <!-- AI sozlamalari -->
+  <div class="modal" id="settings">
+    <div class="card">
+      <div class="row between"><h2>AI sozlamalari</h2><button class="icon-btn" data-close>✕</button></div>
+      <p class="muted" style="margin-top:6px">Haqiqiy AI tahlil uchun bepul Google Gemini API kalitini kiriting (aistudio.google.com → Get API key). Kalit bo'lmasa, DarsIzi tayyor demo ma'lumot bilan ishlaydi.</p>
+      <label class="field"><span>Gemini API kaliti</span><input id="apiKey" type="password" placeholder="AIza..."></label>
+      <label class="field"><span>Model</span><input id="apiModel" placeholder="gemini-2.5-flash"></label>
+      <label class="field"><span>Nutqni aniqlash tili</span>
+        <select id="speechLang"><option value="uz-UZ">O'zbekcha</option><option value="ru-RU">Русский</option><option value="en-US">English</option></select>
+      </label>
+      <div class="row" style="margin-top:8px">
+        <button class="btn btn-ink" id="saveSettings">Saqlash</button>
+        <button class="btn btn-ghost" id="testAI">AI'ni tekshirish</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
