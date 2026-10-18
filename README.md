@@ -12,19 +12,6 @@ to'rt tomon uchun foydaga aylantiradi:
 | 👨‍👩‍👦 Ota-ona | Kechki Telegram xabar, farzandga 1 ta savol, ogohlantirishlar, haftalik grafik |
 | 🏫 Maktab | Mavzular xaritasi (heatmap), KPI, yordam kerak bo'lgan o'quvchilar |
 
-## Ishga tushirish
-
-Hech qanday o'rnatish shart emas — oddiy HTML/CSS/JS.
-
-```bash
-# papkaga kiring va lokal server yoqing
-python3 -m http.server 8000
-# brauzerda oching:  http://localhost:8000
-```
-
-`index.html` ni to'g'ridan-to'g'ri ochsa ham ishlaydi (lekin PWA/oflayn rejim server orqali ishlaydi).
-
-**GitHub Pages:** repo → Settings → Pages → Branch: main → Save. Bir daqiqada sayt tayyor.
 
 ## AI ulash (ixtiyoriy)
 
